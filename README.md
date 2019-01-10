@@ -26,6 +26,10 @@ ansible_ssh_pass=P@ssw0rd
 10.5.95.76
 10.5.97.88
 ```
+  
+  
+
+
 
 * __playbook.yml__
 
@@ -33,16 +37,14 @@ Specify the root directory of PacketGen. It will be create if it is not existed.
 ```
 myhome: "/root/packetgen"
 ```
-
-
+  
 Specify PCI ID of port to be used for PacketGen. If this var is not defined, all Intel port will be included.
 ```
 pciid_list:
 	- "03:00.0"
 	- "03:00.1"
 ```
-
-
+  
 Specify core id to be used for each port. If this var is not defined, (Number of port * 2 + 1) will be included in order. Please make sure the total num of core is enough for all port using. Each port consume two core.
 ```
 numa_list:
@@ -52,4 +54,6 @@ numa_list:
 	- "4"
 	- "7"
 ```
+  
+  
 
