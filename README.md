@@ -27,7 +27,6 @@ ansible_ssh_pass=P@ssw0rd
 10.5.97.88
 ```  
   
-=====
 
 
 
@@ -56,4 +55,8 @@ numa_list:
 ```  
   
   
-
+### Running PacketGen
+```
+cd /root/packetgen/pktgen-dpdk/  #goto pktgen-dpdk under PacketGen root directory
+source ../prepare_env.sh && ./tools/run.py my_default
+```
