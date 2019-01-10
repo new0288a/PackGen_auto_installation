@@ -1,4 +1,4 @@
-{% if numa_list is not define %}
+{% if numa_list is not defined %}
     {% set numa_list = info.numa %}
 {% endif %}
 {% if (pciid_list|length) > ((numa_list|length)//2) %}
