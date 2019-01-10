@@ -13,7 +13,7 @@ This is DPDK PacketGen installation tools. It automate installation of PacketGen
 
 ## How To Use
 ### Modify configuration file
-* __inventory__
+___inventory___
 
 Specify target host and login information here
 ```
@@ -31,7 +31,7 @@ ansible_ssh_pass=P@ssw0rd
 
 
 
-* __playbook.yml__
+___playbook.yml___
 
 Specify the root directory of PacketGen. It will be create if it is not existed. If this var is not defined, the default value "/root/packetgen" will be used.
 ```
