@@ -54,6 +54,11 @@ numa_list:
 	- "7"
 ```  
   
+### Install PacketGen on target hosts
+Deploy PactetGen with ansible after modify configuration file.
+```
+ansible-playbook playbook.yml
+```
   
 ### Running PacketGen
 ```
