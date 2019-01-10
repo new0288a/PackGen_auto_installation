@@ -1,0 +1,32 @@
+import re		
+import commands
+import json
+
+
+#returncode, output = commands.getstatusoutput(" lscpu -p=node,cpu")
+returncode, output = commands.getstatusoutput(" lscpu -p=cpu")
+numa=[]
+for i in  output.split("\n")[4:]:
+	#j = i.split(",")
+	#try:
+  	#	numa[int(j[0])]
+	#except IndexError:
+  	#	numa.append([])
+	#	numa[int(j[0])].append(j[1])
+	#else:
+	#	numa[int(j[0])].append(j[1])
+	numa.append(i)
+	
+pciid_netcard = []
+for oneline in commands.getstatusoutput("lshw -class network -businfo")[1].split('\n')[2:]:
+        temp =  re.split(r' +', oneline)
+        if "Intel" in temp:
+                pciid_netcard.append(temp[0].split(":", 1)[1])
+
+
+michine_state = dict([("numa",numa),("pciid_netcard",pciid_netcard)])
+print(json.dumps(michine_state))
+
+
+
+

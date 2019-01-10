@@ -1,0 +1,110 @@
+---
+        - hosts: local_host
+          gather_facts: no
+          vars:
+                myhome: "/root/packetgen" #Default myhome=/root/vBNG
+                pciid_list: #list all pciid of network port using on PacketGen 
+                        - "03:00.0"
+                        - "03:00.1"
+
+          tasks:
+                - name: set home directory(myhome)
+                  set_fact:
+                        myhome: "/root/packetgen"
+                  when: myhome is not defined
+
+                - name: check whether home directory(myhome) is existed or not
+                  stat:
+                        path: "{{ myhome }}"
+                  register: dir
+                
+                - name: create home directory
+                  file:
+                        path: "{{ myhome }}"
+                        state: directory
+                  when: not dir.stat.exists
+
+                - name: Install required Linux packages
+                  apt:
+                        name: "{{ item }}"
+                  with_items:
+                        - "build-essential"
+                        - "msr-tools"
+                        - "linux-tools-generic"
+                        - "util-linux"
+                        - "linux-headers-generic"
+                        - "numactl"
+                        - "nasm"
+                        - "openssl"
+                        - "dtach"
+                        - "libnuma-dev"
+                        - "python"
+                        - "python-pip"
+                        - "liblua5.3-dev"
+                        - "liblua5.3-0-dbg"
+                        - "liblua5.3-0"
+                        - "libpcap-dev"
+
+                - name: Install required Python packages
+                  pip:
+                        name: "{{ item }}"
+                  with_items:
+                        - "fabric"
+                        - "paramiko"
+                        - "cryptography"
+
+                - name: copy get_host_info.py to hosts
+                  template:
+                        src: "./get_host_info.ja2"
+                        dest: "{{ myhome }}/get_hosts_info.py"
+
+                - name: run get_hosts_info.py
+                  shell: "python {{ myhome }}/get_hosts_info.py"
+                  register: hosts_info
+                  changed_when: False
+
+                - name: set hosts_info from json
+                  set_fact: 
+                        info: "{{ hosts_info.stdout | from_json }}"
+
+                - name: set pciid_list if it is not defined
+                  set_fact:
+                        pciid_list: "{{ info.pciid_netcard }}"
+                  when: pciid_list is not defined
+
+                - name: copy running_env.sh to hosts
+                  template:
+                        src: "./running_env.sh"
+                        dest: "{{ myhome }}/running_env.sh"
+
+                - name: copy prepare_env.sh to hosts
+                  template:
+                        src: "./prepare_env.sh"
+                        dest: "{{ myhome }}/prepare_env.sh"
+
+                - name: Download DPDK
+                  git:
+                        repo: 'http://dpdk.org/git/dpdk'
+                        dest: "{{ myhome }}/dpdk"
+                        force: yes
+                
+                - name: Build DPDK
+                  shell: ". {{ myhome }}/running_env.sh && make -C {{ myhome }}/dpdk/ install T=x86_64-native-linuxapp-gcc"
+
+                - name: Download DPDK PktGen
+                  git:
+                        repo: 'http://dpdk.org/git/apps/pktgen-dpdk'
+                        dest: "{{ myhome }}/pktgen-dpdk"
+                        force: yes
+                
+                - name: Build DPDK PktGen
+                  shell: ". {{ myhome }}/running_env.sh && make -C {{ myhome }}/pktgen-dpdk/ "
+
+                - name: copy my_default.cfg to hosts
+                  template:
+                        src: "./my_default.cfg.ja2"
+                        dest: "{{ myhome }}/pktgen-dpdk/cfg/my_default.cfg"
+
+
+
+
