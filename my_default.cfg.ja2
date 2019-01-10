@@ -1,5 +1,8 @@
-{% if (pciid_list|length) > ((info.numa|length)//2) %}
-    {% set num = ((info.numa|length)//2) %}
+{% if numa_list is not define %}
+    {% set numa_list = info.numa %}
+{% endif %}
+{% if (pciid_list|length) > ((numa_list|length)//2) %}
+    {% set num = ((numa_list|length)//2) %}
 {% else %}
     {% set num = (pciid_list|length) %}
 {% endif %}
@@ -39,7 +42,7 @@ run = {
         '%(sdk)s/%(target)s/app/%(app_name)s',
         ),
 
-        'cores': '{{ info.numa[:num*2+1]|join(",") }}',
+        'cores': '{{ numa_list[:num*2+1]|join(",") }}',
         'nrank': '{{ num }}',
         'proc': 'auto',
         'log': '7',
@@ -61,7 +64,7 @@ run = {
                 #'[15:16].0',
                 #'[17:18].1',
 {% for i in range(num) %}
-                '[{{ info.numa[2*i+1] }}:{{ info.numa[2*i+2] }}].{{ i }}',
+                '[{{ numa_list[2*i+1] }}:{{ numa_list[2*i+2] }}].{{ i }}',
 {% endfor %}
                 ),
         'pcap': (
