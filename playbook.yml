@@ -92,6 +92,7 @@
                   git:
                         repo: 'http://dpdk.org/git/dpdk'
                         dest: "{{ myhome }}/dpdk"
+                        version: tags/v18.08
                         force: yes
                 
                 - name: Build DPDK
@@ -101,6 +102,7 @@
                   git:
                         repo: 'http://dpdk.org/git/apps/pktgen-dpdk'
                         dest: "{{ myhome }}/pktgen-dpdk"
+                        version: tags/pktgen-3.5.4
                         force: yes
                 
                 - name: Build DPDK PktGen

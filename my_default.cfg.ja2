@@ -15,20 +15,24 @@ description = 'A Pktgen default simple configuration'
 # Setup configuration
 setup = {
     'exec': (
-        'sudo', '-E'
+        'sudo',
+        '-E'
         ),
 
-    'devices': (
-            {{ pciid_conf|join(",") }}
-            ),
-    # UIO module type, igb_uio, vfio-pci or uio_pci_generic
-    'uio': 'igb_uio'
-    }
+        'devices': (
+                '{{ pciid_list|join(" ") }}',
+                ),
+
+        'opts': (
+                '-b igb_uio'
+                )
+        }
 
 # Run command and options
 run = {
     'exec': (
-        'sudo', '-E'
+        'sudo',
+        '-E'
         ),
 
     # Application name and use app_path to help locate the app
@@ -42,37 +46,39 @@ run = {
         '%(sdk)s/%(target)s/app/%(app_name)s',
         ),
 
-        'cores': '{{ numa_list[:num*2+1]|join(",") }}',
-        'nrank': '{{ num }}',
-        'proc': 'auto',
-        'log': '7',
-        'prefix': 'pg',
+        'dpdk': (
+                '-l {{ numa_list[:num*2+1]|join(",") }}',
+                '-n {{ num }}',
+                '--proc-type auto',
+                '--log-level 7',
+                '--socket-mem 256,0',
+                '--file-prefix pg'
+                ),
 
         'blacklist': (
-                #'81:00.0', '81:00.1', '81:00.2', '81:00.3',
-                #'83:00.0', '83:00.1', '83:00.2', '83:00.3',
-                #'81:00.2', '81:00.3',
-                #'83:00.2', '83:00.3'
+                #'-b 81:00.0 -b 81:00.1 -b 81:00.2 -b 81:00.3',
+                #'-b 85:00.0 -b 85:00.1 -b 85:00.2 -b 85:00.3',
+                #'-b 81:00.2 -b 81:00.3',
+                #'-b 85:00.2 -b 85:00.3',
+                #'-b 83:00.0'
                 ),
 
-        'opts': (
+        'app': (
                 '-T',
                 '-P',
-                '--crc-strip'
-                ),
-        'map': (
-                #'[15:16].0',
-                #'[17:18].1',
+                '--crc-strip',
+                #'-m [15:16].0',
+                #'-m [17:18].1',
 {% for i in range(num) %}
-                '[{{ numa_list[2*i+1] }}:{{ numa_list[2*i+2] }}].{{ i }}',
+                '-m [{{ numa_list[2*i+1] }}:{{ numa_list[2*i+2] }}].{{ i }}',
 {% endfor %}
-                ),
-        'pcap': (
-                #'0:pcap/test1.pcap'
 {% for i in range(num) %}
-                '{{ i }}:pcap/big.pcap',
+                '-s {{ i }}:pcap/big.pcap',
 {% endfor %}
                 ),
 
-        'theme': 'themes/black-yellow.theme'
+        'misc': (
+                '-f', 'themes/black-yellow.theme'
+                )
         }
+
