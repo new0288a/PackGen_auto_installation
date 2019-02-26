@@ -52,7 +52,11 @@ run = {
                 '--proc-type auto',
                 '--log-level 7',
                 '--socket-mem 256,0',
-                '--file-prefix pg'
+                '--file-prefix pg',
+                '-b d8:00.0',
+                '-b d8:00.1',
+                '-b da:00.0',
+                '-b da:00.1'
                 ),
 
         'blacklist': (
@@ -66,6 +70,7 @@ run = {
         'app': (
                 '-T',
                 '-P',
+                '-g 0.0.0.0:22022',
                 '--crc-strip',
                 #'-m [15:16].0',
                 #'-m [17:18].1',
