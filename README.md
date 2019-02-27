@@ -9,6 +9,7 @@ This is DPDK PacketGen installation tools. It automate installation of PacketGen
 - Target Hosts OS: Ubuntu
 - Python should already be installed
 - Hosts can be access by root with SSH
+- Target Hosts has to have two DPDK compatibility NIC
 
 
 ## How To Use
@@ -37,7 +38,7 @@ Specify the root directory of PacketGen. It will be create if it is not existed.
 myhome: "/root/packetgen"
 ```  
   
-Specify PCI ID of port to be used for PacketGen. If this var is not defined, all Intel port will be included.
+Specify PCI ID of DPDK compability NIC to be used for PacketGen. If this var is not defined, all Intel port will be included.
 ```
 pciid_list:
 	- "03:00.0"
