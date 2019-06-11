@@ -7,8 +7,8 @@ This is DPDK PacketGen installation tools. It automate installation of PacketGen
 
 ## Requirement
 - Target Hosts OS: Ubuntu
-- Python should already be installed
-- Hosts can be access by root with SSH
+- Python should already be installed on target hosts
+- Target Hosts can be access by root with SSH without password
 - Target Hosts has to have two DPDK compatibility NIC
 
 
